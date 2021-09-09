@@ -49,6 +49,12 @@ originalChain= blockchain.chain;
           expect(Blockchain.isValidChain(blockchain.chain)).toBe(false);
         });
       });
+      describe('and it contains a block with a jumped difficulty,',()=>{
+it('returns false',()=>{
+const lastBlock = blockchain.chain[blockchain.chain.length-1];
+
+});
+      });
       describe(" and the chain does not return any invalid blocks", () => {
         it("returns true", () => {
           expect(Blockchain.isValidChain(blockchain.chain)).toBe(true);
