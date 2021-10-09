@@ -8,7 +8,9 @@ const credentials = {
 }; 
 const CHANNELS = {
   TEST: "TEST",
-  BLOCKCHAIN: "BLOCKCHAIN"
+  BLOCKCHAIN: "BLOCKCHAIN",
+  DOGECOIN: "DOGECOIN",
+  
 };
 
 class PubSub {

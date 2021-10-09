@@ -1,5 +1,5 @@
 const redis = require("redis");
-const Blockchain = require("./blockchain");
+const Blockchain = require("../blockchain");
 const CHANNELS = {
   TEST: "TEST",
   BLOCKCHAIN: "BLOCKCHAIN",
