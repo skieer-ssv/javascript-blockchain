@@ -10,6 +10,9 @@ class TransactionPool{
 const transactions = Object.values(this.transactionMap);
 return transactions.find(transaction=>transaction.input.address===inputAddress);
     }
+    setMap(transactionMap){
+        this.transactionMap=transactionMap;
+    }
 }
 
 module.exports = TransactionPool;

@@ -31,7 +31,7 @@ app.post("/api/mine", (req, res) => {
 app.post("/api/transact", (req, res) => {
   const { recipient, amount } = req.body;
   let transaction = transactionPool.existingTransaction({inputAddress:wallet.publicKey});
-
+console.log(recipient,amount);
   try {
     if (transaction){
 transaction.update({senderWallet:wallet ,recipient,amount});
@@ -54,7 +54,8 @@ transaction.update({senderWallet:wallet ,recipient,amount});
 app.get("/api/transaction-pool-map",(req,res)=>{
   res.json(transactionPool.transactionMap);
 });
-const syncChains = () => {
+
+const syncWithRootNode = () => {
   request(
     {
       url: `${ROOT_NODE_ADDRESS}/api/blocks`,
@@ -67,6 +68,13 @@ const syncChains = () => {
       }
     }
   );
+  request({url:`${ROOT_NODE_ADDRESS}/api/transaction-pool-map`},(error,response,body)=>{
+    if(!error && response.statusCode ===200){
+      const rootTransactionPoolMap = JSON.parse(body);
+      console.log("replace chain on sync with ", rootTransactionPoolMap);
+      transactionPool.setMap(rootTransactionPoolMap);
+    }
+  });
 };
 
 let PEER_PORT;
@@ -79,6 +87,6 @@ const PORT = PEER_PORT || DEFAULT_PORT;
 app.listen(PORT, () => {
   console.log(`Listening at localhost:${PORT}`);
   if (PORT !== DEFAULT_PORT) {
-    syncChains();
+    syncWithRootNode();
   }
 });
