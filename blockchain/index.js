@@ -36,8 +36,9 @@ class Blockchain{
     }
 
     replaceChain(chain){
-        if(chain.length <= this.chain.length){
-            console.error('The incoming chain must be longer');
+        if(chain.length <= this.chain.length ){
+            if (chain.length != 1)
+                console.error('The incoming chain must be longer');
             return;
         }
         if(!Blockchain.isValidChain(chain)) {
