@@ -24,10 +24,12 @@ class PubSub {
     const parsedMessage = JSON.parse(message);
     switch(channel) {
       case CHANNELS.BLOCKCHAIN:
-        this.blockchain.replaceChain(parsedMessage);
+        this.blockchain.replaceChain(parsedMessage,()=>{
+          this.transactionPool.clearBlockchainTransactions({chain: parsedMessage});
+        });
         break;
       case CHANNELS.TRANSACTION:
-        this.transactionPool.setTransaction(parsedMessage);
+        this.transactionPool.setMap(parsedMessage["transactionMap"]); // sending in only the transactionMap to be replaced
         break;
       default:
         return;

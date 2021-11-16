@@ -1,3 +1,4 @@
+//......................REQUIREMENTS...............................................
 const express = require("express");
 const bodyParser = require("body-parser");
 const Blockchain = require("./blockchain");
@@ -6,22 +7,27 @@ const PubSub = require("./app/pubsub-redis"); //This uses redis database for pub
 const request = require("request");
 const TransactionPool = require("./wallet/transaction-pool");
 const Wallet = require("./wallet/index");
+const TransactionMiner = require('./app/transaction-miner');
+//.....................CLASS OBJECTS CREATION...................................................
 const app = express();
 const blockchain = new Blockchain();
 const transactionPool = new TransactionPool();
 const wallet = new Wallet();
 const pubsub = new PubSub({blockchain,transactionPool}); //Passing blockchain and transactions to be subscribed and published
-
+const transactionMiner = new TransactionMiner({blockchain,transactionPool,wallet,pubsub});
 const DEFAULT_PORT = 3000;
 const ROOT_NODE_ADDRESS = `http://localhost:${DEFAULT_PORT}`;
 
 app.use(bodyParser.json());
 
+//.....................ENDPOINT CALLS.................................................
 app.get("/api/blocks", (req, res) => {
+  //request for local blockchain instance
   res.json(blockchain.chain);
 });
 
 app.post("/api/mine", (req, res) => {
+  //add new block to the local blockchain and broadcast it
   const { data } = req.body;
   blockchain.addBlock({ data });
   pubsub.broadcastChain();
@@ -29,6 +35,7 @@ app.post("/api/mine", (req, res) => {
 });
 
 app.post("/api/transact", (req, res) => {
+  // add a new transaction to the local pool
   const { recipient, amount } = req.body;
   let transaction = transactionPool.existingTransaction({inputAddress:wallet.publicKey});
 console.log(recipient,amount);
@@ -52,10 +59,20 @@ transaction.update({senderWallet:wallet ,recipient,amount});
   res.json({type:'success', transaction });
 });
 app.get("/api/transaction-pool-map",(req,res)=>{
+  //request for local transaction pool map
   res.json(transactionPool.transactionMap);
 });
 
+app.get('/api/mine-transactions',(req,res)=>{
+  //Mine the local transaction pool, add it to the blockchain and broadcast it
+  transactionMiner.mineTransaction();
+  res.redirect('/api/blocks');
+
+})
+
+//......................FUNCTIONS.......................................................
 const syncWithRootNode = () => {
+  // get same copy of blockchain and transaction pool as node
   request(
     {
       url: `${ROOT_NODE_ADDRESS}/api/blocks`,
