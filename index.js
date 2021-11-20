@@ -20,7 +20,7 @@ const ROOT_NODE_ADDRESS = `http://localhost:${DEFAULT_PORT}`;
 
 app.use(bodyParser.json());
 
-//.....................ENDPOINT CALLS.................................................
+//.....................API ENDPOINT CALLS.................................................
 app.get("/api/blocks", (req, res) => {
   //request for local blockchain instance
   res.json(blockchain.chain);
@@ -47,6 +47,7 @@ transaction.update({senderWallet:wallet ,recipient,amount});
       transaction = wallet.createTransaction({
         recipient,
         amount,
+        chain:blockchain.chain
       });
     }
     
@@ -62,7 +63,6 @@ app.get("/api/transaction-pool-map",(req,res)=>{
   //request for local transaction pool map
   res.json(transactionPool.transactionMap);
 });
-
 app.get('/api/mine-transactions',(req,res)=>{
   //Mine the local transaction pool, add it to the blockchain and broadcast it
   transactionMiner.mineTransaction();
@@ -70,6 +70,10 @@ app.get('/api/mine-transactions',(req,res)=>{
 
 })
 
+app.get('/api/wallet-info',(req,res)=>{
+  const address = wallet.publicKey;
+  res.json({address,balance:Wallet.calculateBalance({chain:blockchain.chain,address})});
+})
 //......................FUNCTIONS.......................................................
 const syncWithRootNode = () => {
   // get same copy of blockchain and transaction pool as node
