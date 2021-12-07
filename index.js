@@ -1,6 +1,7 @@
 //......................REQUIREMENTS...............................................
 const express = require("express");
 const bodyParser = require("body-parser");
+const path = require('path');
 const Blockchain = require("./blockchain");
 const PubSub = require("./app/pubsub-redis"); //This uses redis database for pubsub
 // const PubSub = require("./app/pubsub-nub"); //This uses PubNub service for pubsub
@@ -19,7 +20,7 @@ const DEFAULT_PORT = 3000;
 const ROOT_NODE_ADDRESS = `http://localhost:${DEFAULT_PORT}`;
 
 app.use(bodyParser.json());
-
+app.use(express.static(path.join(__dirname,'client/dist')));
 //.....................API ENDPOINT CALLS.................................................
 app.get("/api/blocks", (req, res) => {
   //request for local blockchain instance
@@ -74,6 +75,10 @@ app.get('/api/wallet-info',(req,res)=>{
   const address = wallet.publicKey;
   res.json({address,balance:Wallet.calculateBalance({chain:blockchain.chain,address})});
 })
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client/dist/index.html'));
+});
 //......................FUNCTIONS.......................................................
 const syncWithRootNode = () => {
   // get same copy of blockchain and transaction pool as node
