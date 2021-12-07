@@ -1,6 +1,8 @@
 import React from "react";
 import { render } from "react-dom";
+import App from './component/App';
 
 render(
-<div>Crypto in React!!:Third Live update</div>, 
+    <App/>,
+
 document.getElementById("root"));
