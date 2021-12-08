@@ -79,6 +79,37 @@ app.get('/api/wallet-info',(req,res)=>{
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'client/dist/index.html'));
 });
+
+//......................DUMMY TEST DATA ......................................
+const walletFoo= new Wallet();
+const walletBar = new Wallet();
+
+const generateWalletTransaction=({wallet,recipient,amount})=>{
+const transaction = wallet.createTransaction({recipient,amount,chain:blockchain.chain});
+transactionPool.setTransaction(transaction);
+};
+
+const walletAction = ()=>generateWalletTransaction({wallet,recipient:walletFoo.publicKey,amount:10});
+const walletFooAction = ()=>generateWalletTransaction({wallet: walletFoo,recipient:walletBar.publicKey,amount:20});
+const walletBarAction = ()=>generateWalletTransaction({wallet: walletBar,recipient:wallet.publicKey,amount:30});
+
+for(let i=0;i<10;++i){
+  if (i%3===0){
+    walletAction();
+    walletFooAction();
+  }
+  if (i%2===0){
+    walletAction();
+    walletBarAction();
+  }
+  else{
+    
+      walletBarAction();
+      walletFooAction();
+    
+  }
+  transactionMiner.mineTransaction();
+}
 //......................FUNCTIONS.......................................................
 const syncWithRootNode = () => {
   // get same copy of blockchain and transaction pool as node
