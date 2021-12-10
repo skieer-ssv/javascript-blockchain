@@ -9,15 +9,21 @@ const request = require("request");
 const TransactionPool = require("./wallet/transaction-pool");
 const Wallet = require("./wallet/index");
 const TransactionMiner = require('./app/transaction-miner');
+
+//Check whether we are in development env
+const isDevelopment = process.env.ENV ==='development';
+const DEFAULT_PORT = 3000;
+const ROOT_NODE_ADDRESS = isDevelopment? `http://localhost:${DEFAULT_PORT}`:'https://'; //add original assigned url here
+const REDIS_URL = isDevelopment? 'redis://127.0.0.1:6379':'redis://'; //add redis-url here
+
 //.....................CLASS OBJECTS CREATION...................................................
 const app = express();
 const blockchain = new Blockchain();
 const transactionPool = new TransactionPool();
 const wallet = new Wallet();
-const pubsub = new PubSub({blockchain,transactionPool}); //Passing blockchain and transactions to be subscribed and published
+const pubsub = new PubSub({blockchain,transactionPool,redisUrl: REDIS_URL}); //Passing blockchain and transactions to be subscribed and published
 const transactionMiner = new TransactionMiner({blockchain,transactionPool,wallet,pubsub});
-const DEFAULT_PORT = 3000;
-const ROOT_NODE_ADDRESS = `http://localhost:${DEFAULT_PORT}`;
+
 
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname,'client/dist')));
@@ -95,6 +101,7 @@ app.get('*', (req, res) => {
 });
 
 //......................DUMMY TEST DATA ......................................
+if(isDevelopment){
 const walletFoo= new Wallet();
 const walletBar = new Wallet();
 
@@ -123,7 +130,7 @@ for(let i=0;i<20;++i){
     
   }
   transactionMiner.mineTransaction();
-}
+}}
 //......................FUNCTIONS.......................................................
 const syncWithRootNode = () => {
   // get same copy of blockchain and transaction pool as node
@@ -154,7 +161,7 @@ if (process.env.GENERATE_PEER_PORT === "true") {
   PEER_PORT = DEFAULT_PORT + Math.ceil(Math.random() * 1000); //This will allocate random port numbers to the peer nodes
 }
 
-const PORT = PEER_PORT || DEFAULT_PORT;
+const PORT = process.env.PORT || PEER_PORT || DEFAULT_PORT;
 app.listen(PORT, () => {
   console.log(`Listening at localhost:${PORT}`);
   if (PORT !== DEFAULT_PORT) {
