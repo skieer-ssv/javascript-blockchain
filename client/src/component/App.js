@@ -1,5 +1,6 @@
 import React, {Component} from "react";
-import Blocks from './Blocks';
+import {Link} from 'react-router-dom';
+import logo from '../assets/cryptolink-logo.png';
 class App extends Component{
 
     state = {walletInfo:{}}
@@ -11,12 +12,16 @@ componentDidMount(){
     render(){
         const {address,balance}= this.state.walletInfo;
         return (
-            <div>
-                <div>Welcome to Blockchain...</div>
+            <div className="App">
+                <img className="logo" src={logo}></img><br />
+                <div>Welcome to CryptoLink Blockchain Network...</div><br/>
+                <div><Link to ='/blocks'>Blocks</Link></div><br/>
+                <div className="walletInfo">
                 <div>Address: {address}</div>
                 <div>Balance: {balance}</div>
-                <br/>
-                <Blocks />
+                </div>
+           
+          
             </div>
             
 
