@@ -90,15 +90,15 @@ transactionPool.setTransaction(transaction);
 };
 
 const walletAction = ()=>generateWalletTransaction({wallet,recipient:walletFoo.publicKey,amount:10});
-const walletFooAction = ()=>generateWalletTransaction({wallet: walletFoo,recipient:walletBar.publicKey,amount:20});
-const walletBarAction = ()=>generateWalletTransaction({wallet: walletBar,recipient:wallet.publicKey,amount:30});
+const walletFooAction = ()=>generateWalletTransaction({wallet: walletFoo,recipient:walletBar.publicKey,amount:10});
+const walletBarAction = ()=>generateWalletTransaction({wallet: walletBar,recipient:wallet.publicKey,amount:10});
 
-for(let i=0;i<10;++i){
+for(let i=0;i<20;++i){
   if (i%3===0){
     walletAction();
     walletFooAction();
   }
-  if (i%2===0){
+  else if (i%3===1){
     walletAction();
     walletBarAction();
   }
