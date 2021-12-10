@@ -1,6 +1,9 @@
 # CRYPTOLINK
-
 This is a proof of concept fullstack implementation of a blockchain environment.
+
+<center><img src="./client/src/assets/cryptolink-logo.png" height=150></center>
+
+
 
 ## Why?
 
@@ -9,7 +12,7 @@ I was interested in blockchain technology and wanted to actually explore how it 
 Finally got a reason to learn and implement the below technologies. Also wanted to try-out [TDD](#development-method). 
 
 ## TechStack
-><br>
+
 
 > - Server-side Scripting => **Node.js@11.0.0**
 >
@@ -38,8 +41,8 @@ Finally got a reason to learn and implement the below technologies. Also wanted 
 ## To run locally
 1. install ```npm``` and ```nodejs```
 2. clone this repo
-3. > ```npm install``` 
-4. > ```npm run dev ```
+3. ```npm install``` 
+4. ```npm run dev ```
 5. Open http://localhost:3000/ on your browser
 
 ## Future Scope
@@ -48,7 +51,8 @@ Finally got a reason to learn and implement the below technologies. Also wanted 
 3. Use socket.io instead of __interval__ for ```transaction Pool```.
 4. Add user __authentication__. 
 
+<br>
 
-
+### <center>Special Thanks to David Katz</center>
 
 
