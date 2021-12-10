@@ -6,7 +6,7 @@ class App extends Component{
     state = {walletInfo:{}}
 
 componentDidMount(){
-    fetch('http://localhost:3000/api/wallet-info').then(response => response.json()).then(json => this.setState({walletInfo:json}));
+    fetch(`${document.location.origin}/api/wallet-info`).then(response => response.json()).then(json => this.setState({walletInfo:json}));
 }
 
     render(){
@@ -16,6 +16,8 @@ componentDidMount(){
                 <img className="logo" src={logo}></img><br />
                 <div>Welcome to CryptoLink Blockchain Network...</div><br/>
                 <div><Link to ='/blocks'>Blocks</Link></div><br/>
+                <div><Link to ='/conduct-transaction'>Conduct a Transaction</Link></div><br/>
+                <div><Link to ='/transaction-pool'> TransactionPool</Link></div><br/>
                 <div className="walletInfo">
                 <div>Address: {address}</div>
                 <div>Balance: {balance}</div>
