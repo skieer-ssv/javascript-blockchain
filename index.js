@@ -9,6 +9,7 @@ const request = require("request");
 const TransactionPool = require("./wallet/transaction-pool");
 const Wallet = require("./wallet/index");
 const TransactionMiner = require('./app/transaction-miner');
+const { splitBsProps } = require("react-bootstrap/lib/utils/bootstrapUtils");
 
 //Check whether we are in development env
 const isDevelopment = process.env.ENV ==='development';
@@ -32,6 +33,23 @@ app.get("/api/blocks", (req, res) => {
   //request for local blockchain instance
   res.json(blockchain.chain);
 });
+app.get('/api/blocks/length',(req,res)=>{
+  res.json(blockchain.chain.length);
+});
+
+app.get('/api/blocks/:id',(req,res)=>{
+  const {id} = req.params;
+  const {length} = blockchain.chain;
+
+  const blocksReversed= blockchain.chain.slice().reverse();
+  let startIndex = (id-1) * 5;
+  let endIndex= id*5;
+
+  startIndex = startIndex < length ? startIndex : length;
+  endIndex = endIndex < length ? endIndex : length;
+
+  res.json(blocksReversed.slice(startIndex, endIndex));
+})
 
 app.post("/api/mine", (req, res) => {
   //add new block to the local blockchain and broadcast it
@@ -106,6 +124,8 @@ for(let block of blockchain.chain){
 }
 res.json(Object.keys(addressMap));
 })
+
+
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'client/dist/index.html'));
