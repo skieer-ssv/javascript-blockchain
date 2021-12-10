@@ -11,10 +11,18 @@ class TransactionMiner{
     }
     mineTransaction(){
         const validTransactions= this.transactionPool.validTransactions();//check if transaction pool is valid
-        validTransactions.push(Transaction.rewardTransaction({minerWallet:this.wallet})); // add the reward transaction for mining
+        if (validTransactions.length >0){
+            validTransactions.push(Transaction.rewardTransaction({minerWallet:this.wallet})); // add the reward transaction for mining
         this.blockchain.addBlock({data:validTransactions}); // add transactions to the block and hash it
         this.pubSub.broadcastChain(); // send the updated chain to all nodes
         this.transactionPool.clearTransactions(); // clear local transaction pool
+        return true;
+        }
+        else{
+            console.error('Atleast 1 transactions needed for a block');
+            return false;
+        }
+        
         
     }
 

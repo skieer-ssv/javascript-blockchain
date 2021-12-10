@@ -38,6 +38,14 @@ app.post("/api/mine", (req, res) => {
 app.post("/api/transact", (req, res) => {
   // add a new transaction to the local pool
   const { recipient, amount } = req.body;
+  if( recipient ===''){
+    res.status(458).json({error:"Invalid receiver's Address"});
+  }
+  else if(amount<0 || amount ===0 ){
+    res.status(458).json({error:"Invalid Amount"});
+  }
+
+  else{
   let transaction = transactionPool.existingTransaction({inputAddress:wallet.publicKey});
 console.log(recipient,amount);
   try {
@@ -58,7 +66,7 @@ transaction.update({senderWallet:wallet ,recipient,amount});
 
   transactionPool.setTransaction(transaction);
   pubsub.broadcastTransaction(transaction);
-  res.json({type:'success', transaction });
+  res.json({type:'success', transaction });}
 });
 app.get("/api/transaction-pool-map",(req,res)=>{
   //request for local transaction pool map
@@ -66,8 +74,14 @@ app.get("/api/transaction-pool-map",(req,res)=>{
 });
 app.get('/api/mine-transactions',(req,res)=>{
   //Mine the local transaction pool, add it to the blockchain and broadcast it
-  transactionMiner.mineTransaction();
-  res.redirect('/api/blocks');
+  if(! transactionMiner.mineTransaction()){
+    
+res.status(457).json({error:"requires atleast 1 Transactions for Mining a block"});
+  }
+  else{
+    res.redirect('/api/blocks');
+  }
+  
 
 })
 

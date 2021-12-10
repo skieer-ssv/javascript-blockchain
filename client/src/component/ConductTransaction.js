@@ -21,8 +21,12 @@ conductTransaction = ()=>{
 
 }
     ).then(response =>response.json()).then(json=>{
+        if(json.error){
+            alert(json.error);
+        }
+        else{
         alert(json.message || json.type);
-        history.push('./transaction-pool')
+        history.push('./transaction-pool')}
     })
 }
 render(){

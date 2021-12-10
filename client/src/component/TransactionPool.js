@@ -6,6 +6,7 @@ import history from '../history';
 const POLL_INTERVAL_MS = 10000;
 
 class TransactionPool extends Component{
+ 
 state={transactionPoolMap:{}}
 
 fetchTransactionPoolMap =()=>{
@@ -16,10 +17,18 @@ fetchTransactionPoolMap =()=>{
 
 fetchMineTransactions=()=>{
     fetch(`${document.location.origin}/api/mine-transactions`).then(response=>{
-        if(response.status===200){
-            alert('Successfully mined transactions');
+        console.log("Response status: ",response);
+        if(response.status===200 ){
+           alert('Successfully mined transactions');
             history.push('/blocks');
-        }else{
+        }else if(response.status===457){
+            
+             response.json().then(json=> {console.log(json);
+                alert(json.error);});
+            
+            
+        }
+        else{
             alert('The mine-transactions block request did not complete')
         }
     });
