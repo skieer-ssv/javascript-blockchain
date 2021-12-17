@@ -1,0 +1,42 @@
+body{
+    background-color: #444;
+    color: aliceblue;
+    text-align: center;
+    font-size: 20px;
+    font-family: 'Raleway';
+    padding-top: 5%;
+    word-wrap: break-word;
+}
+
+.logo{
+    width: 250px;
+    height: 250px;
+}
+
+.App{
+display: flex;
+flex-direction: column;
+align-items: center;
+}
+
+.walletInfo{
+    width: 500px;
+}
+
+.Block{
+    border: 1px solid rgb(10, 212, 10);
+    padding: 5%;
+    margin: 2%; 
+}
+
+.Transaction{
+    padding:5%;
+}
+
+a, a:hover{
+    color: #e66;
+    text-decoration: wavy;
+}
+.ConductTransaction, .TransactionPool{
+    margin:10%;
+}
